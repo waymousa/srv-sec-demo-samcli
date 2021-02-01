@@ -1,45 +1,39 @@
 import json
+import security_layer as security_layer
 
 # import requests
 
 
 def lambda_handler(event, context):
-    """Sample pure Lambda function
+    
+    security_layer.getLogonInfo()
 
-    Parameters
-    ----------
-    event: dict, required
-        API Gateway Lambda Proxy Input Format
-
-        Event doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html#api-gateway-simple-proxy-for-lambda-input-format
-
-    context: object, required
-        Lambda Context runtime methods and attributes
-
-        Context doc: https://docs.aws.amazon.com/lambda/latest/dg/python-context-object.html
-
-    Returns
-    ------
-    API Gateway Lambda Proxy Output Format: dict
-
-        Return doc: https://docs.aws.amazon.com/apigateway/latest/developerguide/set-up-lambda-proxy-integrations.html
-    """
-
-    # try:
-    #     ip = requests.get("http://checkip.amazonaws.com/")
-    # except requests.RequestException as e:
-    #     # Send some context about this error to Lambda Logs
-    #     print(e)
-
-    #     raise e
+    longinformation = '''
+    <head>
+    <meta charset="UTF-8">
+    <title>Amazon Cognito Credentials Example</title>
+    <meta charset="utf-8">
+    <script src="./main.ts"></script>
+    <script>
+      showId();
+    </script>
+    </head>
+    <html>
+    <body onload="showId();">
+    <h1>Hello world</h1>
+    <p>This site is a prototype API which does little.</p>
+    <h1>Login</h1>
+    <a href="https://srv-sec-semo-875667080425.auth.us-east-1.amazoncognito.com/login?response_type=token&client_id=13plluo9hsnmpaosrrce2rf65k&redirect_uri=https://c19g7smvpc.execute-api.us-east-1.amazonaws.com/Dev/">Login</a>
+    <h1>Logout</h1>
+    <a href="https://srv-sec-semo-875667080425.auth.us-east-1.amazoncognito.com/logout?client_id=13plluo9hsnmpaosrrce2rf65k&logout_uri=https://c19g7smvpc.execute-api.us-east-1.amazonaws.com/Dev/">Logout</a>
+    <h1>Secret</h1>
+    <a href="/secret">Secret</a>
+    <div id="results">data</div>
+    </html>
+    '''
 
     return {
         "statusCode": 200,
-        "body": '''
-                <html>
-                <h1>Hello world</h1>
-                <p>This site is a prototype API which does little.</p>
-                </html>
-                '''
-        }),
+        "headers": {'Content-Type': 'text/html'},
+        "body": longinformation
     }
