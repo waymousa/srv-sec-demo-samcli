@@ -15,12 +15,16 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: Dev
-      Cors: "'*'"
+      Cors:
+        AllowMethods: "'OPTIONS, GET'"
+        AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+        AllowOrigin: "'*'"
       Auth:
         DefaultAuthorizer: SrvSecDemoCognitoAuthorizer
         Authorizers:
           SrvSecDemoCognitoAuthorizer:
             UserPoolArn: !GetAtt SrvSecDemoCognitoUserPool.Arn
+        AddDefaultAuthorizerToCorsPreflight: False
 
   SrvSecDemoCognitoUserPool:
     Type: AWS::Cognito::UserPool

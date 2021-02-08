@@ -5,8 +5,11 @@ import security_layer as security_layer
 
 
 def lambda_handler(event, context):
-    
-    security_layer.getLogonInfo()
+
+    respjson = { 
+        "layer": security_layer.getLogonInfo(), 
+        "message": "hello world"
+    } 
 
     longinformation = '''
     <head>
@@ -34,6 +37,11 @@ def lambda_handler(event, context):
 
     return {
         "statusCode": 200,
-        "headers": {'Content-Type': 'text/html'},
-        "body": longinformation
+        "headers": {
+          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+          "Access-Control-Allow-Origin": "https://diq3qr0d5ppph.cloudfront.net"
+        },
+        
+        "body": json.dumps(respjson)
     }
