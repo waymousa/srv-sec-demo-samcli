@@ -9,10 +9,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
  </head>
 
- <body onload="login()">
+ <body>
+    <form onsubmit="login()">
+        <input type="submit">Login</form>
+    </form>
   <div class="noworkspaces" id="noworkspaces">No Workspaces instances found for you! (sorry)</div>
   <div class="response" id="response"></div>
   <div class="workspaceslist" id="userworkspaces"></div>
   <div class="workspaceslist" id="adminworkspaces"></div>
+
  </body>
 </html>
