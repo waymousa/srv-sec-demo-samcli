@@ -1,0 +1,130 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: 'serverless-security-demo
+
+  Sample SAM Template for serverless-security-demo
+
+  '
+Globals:
+  Function:
+    Timeout: 3
+Resources:
+  SecureApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Dev
+      Cors:
+        AllowMethods: '''OPTIONS, GET'''
+        AllowHeaders: '''Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'''
+        AllowOrigin: '''*'''
+      Auth:
+        DefaultAuthorizer: SrvSecDemoCognitoAuthorizer
+        Authorizers:
+          SrvSecDemoCognitoAuthorizer:
+            UserPoolArn:
+              Fn::GetAtt:
+              - SrvSecDemoCognitoUserPool
+              - Arn
+        AddDefaultAuthorizerToCorsPreflight: false
+  SrvSecDemoCognitoUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: SrvSecDemoCognitoUserPool
+      AdminCreateUserConfig:
+        AllowAdminCreateUserOnly: false
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+      UsernameAttributes:
+      - email
+      AutoVerifiedAttributes:
+      - email
+      Schema:
+      - AttributeDataType: String
+        Name: email
+        Required: false
+  SrvSecDemoCognitoUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId:
+        Ref: SrvSecDemoCognitoUserPool
+      ClientName: SrvSecDemoCognitoUserPoolClient
+      GenerateSecret: false
+  UserPoolUser:
+    Type: AWS::Cognito::UserPoolUser
+    Properties:
+      DesiredDeliveryMediums:
+      - EMAIL
+      Username: swaym@amazon.co.uk
+      UserPoolId:
+        Ref: SrvSecDemoCognitoUserPool
+  HomePageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://sam-app-repo-875667080425/17c61d218608b19d95e208c734af41d4
+      Handler: home.lambda_handler
+      Runtime: python3.7
+      Layers:
+      - Ref: Securitylayer
+      Events:
+        Root:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: SecureApi
+            Path: /home
+            Method: GET
+  SecretFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://sam-app-repo-875667080425/17c61d218608b19d95e208c734af41d4
+      Handler: secret.lambda_handler
+      Runtime: python3.7
+      Layers:
+      - Ref: Securitylayer
+      Events:
+        Root:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: SecureApi
+            Path: /secret
+            Method: GET
+  Securitylayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: s3://sam-app-repo-875667080425/de0605f17cc3a6932896584fefe02be8
+      CompatibleRuntimes:
+      - python3.7
+    Metadata:
+      BuildMethod: python3.7
+  Metadata:
+    AWS::ServerlessRepo::Application:
+      Name: serverless-security-demo
+      Description: Simple serverless application to demonstrate security concepts
+      Author: Amazon Web Services
+      SpdxLicenseId: Apache-2.0
+      LicenseUrl: LICENSE.txt
+      ReadmeUrl: README.md
+      Labels:
+      - tests
+      HomePageUrl: https://github.com/waymousa/srv-sec-demo-samcli
+      SemanticVersion: '0.0.1'
+      SourceCodeUrl: https://github.com/waymousa/srv-sec-demo-samcli
+Outputs:
+  HomePageApi:
+    Description: API Gateway endpoint URL for Prod stage for Hello World function
+    Value:
+      Fn::Sub: https://${SecureApi}.execute-api.${AWS::Region}.amazonaws.com/Dev/
+  HomePageFunction:
+    Description: Home page Lambda Function ARN
+    Value:
+      Fn::GetAtt:
+      - HomePageFunction
+      - Arn
+  HomePageFunctionIamRole:
+    Description: Implicit IAM Role created for Home Page function
+    Value:
+      Fn::GetAtt:
+      - HomePageFunction
+      - Arn

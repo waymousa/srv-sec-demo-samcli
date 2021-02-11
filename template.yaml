@@ -100,6 +100,19 @@ Resources:
     Metadata:
       BuildMethod: python3.7
 
+  Metadata:
+    AWS::ServerlessRepo::Application:
+      Name: serverless-security-demo
+      Description: Simple serverless application to demonstrate security concepts
+      Author: Amazon Web Services
+      SpdxLicenseId: Apache-2.0
+      LicenseUrl: LICENSE.txt
+      ReadmeUrl: README.md
+      Labels: ['tests']
+      HomePageUrl: https://github.com/waymousa/srv-sec-demo-samcli
+      SemanticVersion: 0.0.1
+      SourceCodeUrl: https://github.com/waymousa/srv-sec-demo-samcli
+
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
