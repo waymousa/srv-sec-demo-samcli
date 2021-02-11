@@ -5,6 +5,19 @@ Description: 'serverless-security-demo
   Sample SAM Template for serverless-security-demo
 
   '
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: serverless-security-demo
+    Description: Simple serverless application to demonstrate security concepts
+    Author: Samuel Waymouth
+    SpdxLicenseId: Apache-2.0
+    LicenseUrl: s3://sam-app-repo-875667080425/f2f4f1c7718eafbf1d0f861ba6331168
+    ReadmeUrl: s3://sam-app-repo-875667080425/699260724f2eac161ebb17d1dcb0c928
+    Labels:
+    - tests
+    HomePageUrl: https://github.com/waymousa/srv-sec-demo-samcli
+    SemanticVersion: '0.0.1'
+    SourceCodeUrl: https://github.com/waymousa/srv-sec-demo-samcli
 Globals:
   Function:
     Timeout: 3
@@ -98,19 +111,6 @@ Resources:
       - python3.7
     Metadata:
       BuildMethod: python3.7
-  Metadata:
-    AWS::ServerlessRepo::Application:
-      Name: serverless-security-demo
-      Description: Simple serverless application to demonstrate security concepts
-      Author: Amazon Web Services
-      SpdxLicenseId: Apache-2.0
-      LicenseUrl: LICENSE.txt
-      ReadmeUrl: README.md
-      Labels:
-      - tests
-      HomePageUrl: https://github.com/waymousa/srv-sec-demo-samcli
-      SemanticVersion: '0.0.1'
-      SourceCodeUrl: https://github.com/waymousa/srv-sec-demo-samcli
 Outputs:
   HomePageApi:
     Description: API Gateway endpoint URL for Prod stage for Hello World function

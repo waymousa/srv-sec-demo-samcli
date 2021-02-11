@@ -6,6 +6,20 @@ Description: >
   Sample SAM Template for serverless-security-demo
 
 # More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: serverless-security-demo
+    Description: Simple serverless application to demonstrate security concepts
+    Author: Samuel Waymouth
+    SpdxLicenseId: Apache-2.0
+    LicenseUrl: LICENSE.txt
+    ReadmeUrl: README.md
+    Labels: ['tests']
+    HomePageUrl: https://github.com/waymousa/srv-sec-demo-samcli
+    SemanticVersion: 0.0.1
+    SourceCodeUrl: https://github.com/waymousa/srv-sec-demo-samcli
+
 Globals:
   Function:
     Timeout: 3
@@ -99,19 +113,6 @@ Resources:
         - python3.7
     Metadata:
       BuildMethod: python3.7
-
-  Metadata:
-    AWS::ServerlessRepo::Application:
-      Name: serverless-security-demo
-      Description: Simple serverless application to demonstrate security concepts
-      Author: Amazon Web Services
-      SpdxLicenseId: Apache-2.0
-      LicenseUrl: LICENSE.txt
-      ReadmeUrl: README.md
-      Labels: ['tests']
-      HomePageUrl: https://github.com/waymousa/srv-sec-demo-samcli
-      SemanticVersion: 0.0.1
-      SourceCodeUrl: https://github.com/waymousa/srv-sec-demo-samcli
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
