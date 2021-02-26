@@ -10,7 +10,17 @@
  </head>
 
  <body>
-  <button onclick="login()">Login</button> 
+  <button onclick="login()">Login</button>
+  <button onclick="logout()">Logout</button>
+  <button onclick="GetHomePage()">GetHomePage</button>
+  <button onclick="GetSecretPage()">GetSecretPage</button>
+  <p>
+    <label for="command">command:</label>
+    <input type="text" id="command" name="command"></input>
+    <button onclick="RunCommand()">RunCommand</button>
+  </p>
+  <div class="publicpage" id="publicpage"></div>
+  <div class="secretpage" id="secretpage"></div>
   <div class="noworkspaces" id="noworkspaces">No Workspaces instances found for you! (sorry)</div>
   <div class="response" id="response"></div>
   <div class="workspaceslist" id="userworkspaces"></div>

@@ -104,6 +104,25 @@ Resources:
             RestApiId: !Ref SecureApi
             Path: /secret
             Method: GET
+  
+  CommandFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: security_serverless_demo/
+      Handler: secret.lambda_handler
+      Runtime: python3.7
+      Layers:
+        - !Ref Securitylayer
+      Events:
+        Root:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            RestApiId: !Ref SecureApi
+            Path: /cmd
+            Method: GET
+      Environment:
+        Variables:
+          loglevel: INFO
 
   Securitylayer:
     Type: AWS::Serverless::LayerVersion
