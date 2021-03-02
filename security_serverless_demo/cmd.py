@@ -64,7 +64,12 @@ def lambda_handler(event, context):
         code = 500
         response = {
             "statusCode": code,
-            "headers": {"content-type": "text/html"},
+            "headers": {
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+                "Access-Control-Allow-Origin": "https://diq3qr0d5ppph.cloudfront.net",
+                "content-type": "text/html"
+                },
             "body": result
         }
 

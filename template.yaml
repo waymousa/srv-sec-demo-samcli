@@ -30,7 +30,7 @@ Resources:
     Properties:
       StageName: Dev
       Cors:
-        AllowMethods: "'OPTIONS, GET'"
+        AllowMethods: "'OPTIONS, GET, POST'"
         AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
         AllowOrigin: "'*'"
       Auth:
@@ -109,7 +109,7 @@ Resources:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
       CodeUri: security_serverless_demo/
-      Handler: secret.lambda_handler
+      Handler: cmd.lambda_handler
       Runtime: python3.7
       Layers:
         - !Ref Securitylayer
@@ -119,7 +119,7 @@ Resources:
           Properties:
             RestApiId: !Ref SecureApi
             Path: /cmd
-            Method: GET
+            Method: POST
       Environment:
         Variables:
           loglevel: INFO

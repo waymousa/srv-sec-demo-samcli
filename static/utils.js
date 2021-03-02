@@ -28,6 +28,7 @@ CloudFrontName    = "diq3qr0d5ppph.cloudfront.net";
 
 USER_API_URL  = "https://"+APIGatewayId+".execute-api."+RegionName+".amazonaws.com/Dev/home"
 SECRET_API_URL = "https://"+APIGatewayId+".execute-api."+RegionName+".amazonaws.com/Dev/secret"
+RUNCMD_API_URL  = "https://"+APIGatewayId+".execute-api."+RegionName+".amazonaws.com/Dev/cmd"
 authRedirect  = "https://"+CognitoDomainName+".auth."+RegionName+".amazoncognito.com/login?response_type=token&client_id="+CognitoClientId+"&redirect_uri=https%3A%2F%2F"+CloudFrontName+"%2Findex.html";
 //authRedirect  = "https://"+CognitoDomainName+".auth."+RegionName+".amazoncognito.com/login?response_type=token&client_id="+CognitoClientId+"&redirect_uri=https%3A%2F%2F"+S3BucketName+".s3."+RegionName+".amazonaws.com%2Findex.html";
 
@@ -322,4 +323,34 @@ function GetSecretPage() {
   API_Client.timeout = 10000;
   API_Client.ontimeout = ProcessTimeout;
   API_Client.send();
+}
+function RunCommand() {
+  var accessToken = localStorage.getItem('WorkspacesAccessToken');
+  //var API_URL = RUNCMD_API_URL+"?command="+document.getElementById("command").value;
+  var API_URL = RUNCMD_API_URL;
+  var API_Client = new XMLHttpRequest();
+  let urlEncodedData = "",
+      urlEncodedDataPairs = [];
+  urlEncodedDataPairs.push( encodeURIComponent( "command" ) + '=' + encodeURIComponent( document.getElementById("command").value) );
+  urlEncodedData = urlEncodedDataPairs.join( '&' ).replace( /%20/g, '+' );
+  //var formData = new FormData();
+  //formData.append("command", document.getElementById("command").value);
+  API_Client.onreadystatechange = function() {
+   if (API_Client.readyState == XMLHttpRequest.DONE) {
+    Result = API_Client.responseText;
+    console.log(Result);
+    document.getElementById("commandresult").innerHTML = Result;
+   }
+  }
+
+  API_Client.open("post", API_URL);
+  //API_Client.withCredentials = true;
+  API_Client.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+  //API_Client.setRequestHeader("Access-Control-Allow-Headers", "Content-Type");
+  //API_Client.setRequestHeader("Access-Control-Allow-Methods", "OPTIONS,POST,GET");
+  //API_Client.setRequestHeader("Access-Control-Allow-Origin", "*");
+  API_Client.setRequestHeader("Authorization", accessToken);
+  API_Client.timeout = 10000;
+  API_Client.ontimeout = ProcessTimeout;
+  API_Client.send(urlEncodedData);
 }
