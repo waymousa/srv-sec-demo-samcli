@@ -38,7 +38,12 @@ def lambda_handler(event, context):
         result = '{"result":%s}' % (result)
         response = {
             "statusCode": 200,
-            "headers": {"content-type": "application/json"},
+            "headers": {
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+                "Access-Control-Allow-Origin": "https://diq3qr0d5ppph.cloudfront.net",
+                "content-type": "text/html"
+                },
             "body": result
         }
 
