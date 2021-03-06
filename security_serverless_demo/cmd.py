@@ -73,7 +73,7 @@ def lambda_handler(event, context):
                 "Access-Control-Allow-Headers": "Content-Type",
                 "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
                 "Access-Control-Allow-Origin": "https://diq3qr0d5ppph.cloudfront.net",
-                "content-type": "text/html"
+                "Content-Type": "application/json"
                 },
             "body": result
         }

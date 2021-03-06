@@ -1,32 +1,58 @@
-import requests, logging, os, boto3, urllib, uuid, json
+import boto3, logging, html, os, json
+from json2html import *
 
 logger = logging.getLogger()
 logger.setLevel(os.environ['loglevel'])
 logger.debug('os.environ=%s' % os.environ)
 
-def lambda_handler(event, context):
-    logger.debug('got event{}'.format(event)) 
-    dynamodb = boto3.resource('dynamodb')
-    table = dynamodb.Table(os.environ['table']) 
-    body=event['body']
-    logger.debug('body=%s' % body)
-    body=urllib.parse.parse_qs(body)
-    logger.debug('transformed_body=%s' % body) 
-    firstname=body['firstname']
-    firstname=firstname[0]
-    logger.debug('firstname=%s' % firstname)
-    surname=body['surname']
-    surname=surname[0]
-    logger.debug('surname=%s' % surname)
-    email=body['email']
-    email=email[0]
-    logger.debug('email=%s' % email)
-    myuuid=str(uuid.uuid4())
-    logger.debug('uuid=%s' % myuuid)
-    response=table.put_item(Item={"uuid":myuuid,"firstname":firstname,"surname":surname,"email":email})
-    logger.debug('put_item suceeded.')
+dynamodb = boto3.resource('dynamodb')
 
-    return {
+def lambda_handler(event, context):
+    table = dynamodb.Table(os.environ['table'])
+
+    # fetch all todos from the database
+    result = table.scan()
+
+    logger.debug('result_set=%s' % result)
+
+    items = json.dumps(result['Items'])
+
+    logger.debug('result_items=%s' % items)
+
+    table = json2html.convert(json = items)
+
+    logger.debug('table=%s' % table)
+
+    table = html.unescape(table)
+
+    logger.debug('unecoded_table=%s' % table)
+    # create a response
+    
+    #response = {
+    #    "statusCode": 200,
+    #    "body": json.dumps(result['Items'])
+    #}
+
+    #itemslist = []
+    #itemsdict = {}
+
+    #for i in result['Items']:
+    #    itemsdict = json.loads(i)
+    #    newitems.append(itemsdict)    
+
+        # print(json.dumps(i, cls=DecimalEncoder))
+    
+
+
+    response = {
         "statusCode": 200,
-        "body": json.dumps(response)
+        "headers": {
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+            "Access-Control-Allow-Origin": "https://diq3qr0d5ppph.cloudfront.net",
+            "Content-Type": "application/json"
+            },
+        "body": table
     }
+
+    return response

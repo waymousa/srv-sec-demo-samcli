@@ -12,16 +12,31 @@
  <body>
   <button onclick="login()">Login</button>
   <button onclick="logout()">Logout</button>
-  <button onclick="GetHomePage()">GetHomePage</button>
-  <button onclick="GetSecretPage()">GetSecretPage</button>
+  <p>
+    <button onclick="GetHomePage()">GetHomePage</button>
+    <div class="publicpage" id="publicpage"></div>
+  </p>
+  <p>
+    <button onclick="GetSecretPage()">GetSecretPage</button>
+    <div class="secretpage" id="secretpage"></div>
+  </p>
   <p>
     <label for="command">command:</label>
     <input type="text" id="command" name="command"></input>
     <button onclick="RunCommand()">RunCommand</button>
+    <div class="commandresult" id="commandresult">command result:</div>
   </p>
-  <div class="publicpage" id="publicpage"></div>
-  <div class="secretpage" id="secretpage"></div>
-  <div class="commandresult" id="commandresult">command result:</div>
+  <p>
+    <tr><td><label for="firstname">firstname:</label></td><td><input type="text" name="firstname" id="firstname"></td></tr>
+    <tr><td><label for="surname">surname:</label></td><td><input type="text" name="surname" id="surname"></td></tr>
+    <tr><td><label for="email">email:</label></td><td><input type="text" name="email" id="email"></td></tr>
+    <button onclick="WriteToDynamoDb()">Register</button>
+    <div class="writetodynamodbresult" id="writetodynamodbresult">Register result:</div>
+  </p>
+  <p>
+    <button onclick="ReadFromDynamoDb()">Get Registered Users</button>
+    <div class="readfromdynamodbresult" id="readfromdynamodbresult">Registeres users result:</div>
+  </p>
   <div class="noworkspaces" id="noworkspaces">No Workspaces instances found for you! (sorry)</div>
   <div class="response" id="response"></div>
   <div class="workspaceslist" id="userworkspaces"></div>

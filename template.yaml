@@ -78,7 +78,7 @@ Resources:
     Properties:
       CodeUri: security_serverless_demo/
       Handler: home.lambda_handler
-      Runtime: python3.7
+      Runtime: python3.8
       Layers:
         - !Ref Securitylayer
       Events:
@@ -94,7 +94,7 @@ Resources:
     Properties:
       CodeUri: security_serverless_demo/
       Handler: secret.lambda_handler
-      Runtime: python3.7
+      Runtime: python3.8
       Layers:
         - !Ref Securitylayer
       Events:
@@ -110,7 +110,7 @@ Resources:
     Properties:
       CodeUri: security_serverless_demo/
       Handler: cmd.lambda_handler
-      Runtime: python3.7
+      Runtime: python3.8
       Layers:
         - !Ref Securitylayer
       Events:
@@ -129,11 +129,12 @@ Resources:
     Properties:
       CodeUri: security_serverless_demo/
       Handler: rddb.lambda_handler
-      Runtime: python3.6
+      Runtime: python3.8
       Events:
         Root:
           Type: Api
           Properties:
+            RestApiId: !Ref SecureApi
             Path: /rddb
             Method: get
       Environment:
@@ -144,36 +145,38 @@ Resources:
         - DynamoDBReadPolicy:
             TableName: !Ref TableOfStuff
 
-    WriteToDynamoDBFunction:
-      Type: AWS::Serverless::Function
-      Properties:
-        CodeUri: security_serverless_demo/
-        Handler: wddb.lambda_handler
-        Runtime: python3.6
-        Events:
-          Root:
-            Type: Api 
-            Properties:
-              Path: /wddb
-              Method: post
-        Environment:
-          Variables:
-            loglevel: INFO
-            table: !Ref TableOfStuff
-        Policies:
-          - DynamoDBCrudPolicy:
-              TableName: !Ref TableOfStuff
+  WriteToDynamoDBFunction:
+    Type: AWS::Serverless::Function      
+    Properties:
+      CodeUri: security_serverless_demo/
+      Handler: wddb.lambda_handler
+      Runtime: python3.8
+      Events:
+        Root:
+          Type: Api 
+          Properties:
+            RestApiId: !Ref SecureApi
+            Path: /wddb
+            Method: post
+      Environment:
+        Variables:
+          loglevel: INFO
+          table: !Ref TableOfStuff
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TableOfStuff
 
     BadApi:
       Type: AWS::Serverless::Function
       Properties:
         CodeUri: security_serverless_demo/
         Handler: badapi.lambda_handler
-        Runtime: python3.6
+        Runtime: python3.8
         Events:
-          Administration:
+          Root:
             Type: Api
             Properties:
+              RestApiId: !Ref SecureApi
               Path: /badapi
               Method: post
       Environment:
@@ -185,17 +188,18 @@ Resources:
       Properties:
         CodeUri: security_serverless_demo/
         Handler: invokeapi.lambda_handler
-        Runtime: python3.6
+        Runtime: python3.8
       Events:
-        Administration:
+        Root:
           Type: Api
           Properties:
+            RestApiId: !Ref SecureApi
             Path: /invokeapi
             Method: post
       Environment:
         Variables:
           loglevel: INFO
-          apiurl: https://7cnvooeybd.execute-api.us-east-1.amazonaws.com/Prod/badapi
+          apiurl: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Dev/badapi"
 
   TableOfStuff:
     Type: AWS::DynamoDB::Table
@@ -223,9 +227,9 @@ Resources:
     Properties:
       ContentUri: ./security_layer
       CompatibleRuntimes:
-        - python3.7
+        - python3.8
     Metadata:
-      BuildMethod: python3.7
+      BuildMethod: python3.8
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -233,22 +237,22 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   HomePageApi:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${HomePageFunction}.execute-api.${AWS::Region}.amazonaws.com/Dev/home"
+    Value: !Sub "https://${SecureApi}.execute-api.${AWS::Region}.amazonaws.com/Dev/home"
   SecretFunctionApi:
     Description: "API Gateway endpoint URL for Dev stage for Secret function"
-    Value: !Sub "https://${SecretFunction}.execute-api.${AWS::Region}.amazonaws.com/Dev/secret"
+    Value: !Sub "https://${SecureApi}.execute-api.${AWS::Region}.amazonaws.com/Dev/secret"
   CommandFunctionApi:
     Description: "API Gateway endpoint URL for Prod stage for Command function"
-    Value: !Sub "https://${CommandFunction}.execute-api.${AWS::Region}.amazonaws.com/Dev/cmd"
+    Value: !Sub "https://${SecureApi}.execute-api.${AWS::Region}.amazonaws.com/Dev/cmd"
   ReadFromDynamoDBFunctionApi:
     Description: "API Gateway endpoint URL for Dev stage for Read from Dynamodb function"
-    Value: !Sub "https://${ReadFromDynamoDBFunction}.execute-api.${AWS::Region}.amazonaws.com/Dev/rddb"
+    Value: !Sub "https://${SecureApi}.execute-api.${AWS::Region}.amazonaws.com/Dev/rddb"
   WriteToDynamoDBFunctionApi:
     Description: "API Gateway endpoint URL for Dev stage for Write to Dynamodb function"
-    Value: !Sub "https://${WriteToDynamoDBFunction}.execute-api.${AWS::Region}.amazonaws.com/Dev/wddb"
+    Value: !Sub "https://${SecureApi}.execute-api.${AWS::Region}.amazonaws.com/Dev/wddb"
   BadApi:
     Description: "API Gateway endpoint URL for Dev stage for a Bad API function"
-    Value: !Sub "https://${BadApi}.execute-api.${AWS::Region}.amazonaws.com/Dev/badapi"
+    Value: !Sub "https://${SecureApi}.execute-api.${AWS::Region}.amazonaws.com/Dev/badapi"
   InvokeApi:
     Description: "API Gateway endpoint URL for Dev stage for a Bad API function"
-    Value: !Sub "https://${InvokeApi}.execute-api.${AWS::Region}.amazonaws.com/Dev/invokeapi"
+    Value: !Sub "https://${SecureApi}.execute-api.${AWS::Region}.amazonaws.com/Dev/invokeapi"
