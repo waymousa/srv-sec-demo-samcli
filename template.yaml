@@ -131,7 +131,7 @@ Resources:
       Handler: rddb.lambda_handler
       Runtime: python3.6
       Events:
-        ReadFromDynamoDB:
+        Root:
           Type: Api
           Properties:
             Path: /rddb
@@ -140,63 +140,62 @@ Resources:
         Variables:
           loglevel: INFO
           table: !Ref TableOfStuff
-        Policies:
-          - DynamoDBReadPolicy:
-              TableName: !Ref TableOfStuff
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref TableOfStuff
 
     WriteToDynamoDBFunction:
-        Type: AWS::Serverless::Function
-        Properties:
-            CodeUri: security_serverless_demo/
-            Handler: wddb.lambda_handler
-            Runtime: python3.6
-            Events:
-                WriteToDynamoDB:
-                    Type: Api 
-                    Properties:
-                        Path: /wddb
-                        Method: post
-            Environment:
-                Variables:
-                    loglevel: INFO
-                    table: !Ref TableOfStuff
-            Policies:
-                - DynamoDBCrudPolicy:
-                      TableName: !Ref TableOfStuff
+      Type: AWS::Serverless::Function
+      Properties:
+        CodeUri: security_serverless_demo/
+        Handler: wddb.lambda_handler
+        Runtime: python3.6
+        Events:
+          Root:
+            Type: Api 
+            Properties:
+              Path: /wddb
+              Method: post
+        Environment:
+          Variables:
+            loglevel: INFO
+            table: !Ref TableOfStuff
+        Policies:
+          - DynamoDBCrudPolicy:
+              TableName: !Ref TableOfStuff
 
     BadApi:
-        Type: AWS::Serverless::Function
-        Properties:
-            CodeUri: security_serverless_demo/
-            Handler: badapi.lambda_handler
-            Runtime: python3.6
-            Events:
-                Administration:
-                    Type: Api
-                    Properties:
-                        Path: /badapi
-                        Method: post
-            Environment:
-                Variables:
-                    loglevel: INFO
+      Type: AWS::Serverless::Function
+      Properties:
+        CodeUri: security_serverless_demo/
+        Handler: badapi.lambda_handler
+        Runtime: python3.6
+        Events:
+          Administration:
+            Type: Api
+            Properties:
+              Path: /badapi
+              Method: post
+      Environment:
+        Variables:
+          loglevel: INFO
 
     InvokeApi:
-        Type: AWS::Serverless::Function
-        Properties:
-            CodeUri: security_serverless_demo/
-            Handler: invokeapi.lambda_handler
-            Runtime: python3.6
-            Events:
-                Administration:
-                    Type: Api
-                    Properties:
-                        Path: /invokeapi
-                        Method: post
-            Environment:
-                Variables:
-                    loglevel: INFO
-                    apiurl: https://7cnvooeybd.execute-api.us-east-1.amazonaws.com/Prod/badapi
-                    #apiurl: https://13.32.243.111/Prod/badapi
+      Type: AWS::Serverless::Function
+      Properties:
+        CodeUri: security_serverless_demo/
+        Handler: invokeapi.lambda_handler
+        Runtime: python3.6
+      Events:
+        Administration:
+          Type: Api
+          Properties:
+            Path: /invokeapi
+            Method: post
+      Environment:
+        Variables:
+          loglevel: INFO
+          apiurl: https://7cnvooeybd.execute-api.us-east-1.amazonaws.com/Prod/badapi
 
   TableOfStuff:
     Type: AWS::DynamoDB::Table
