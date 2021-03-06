@@ -29,6 +29,9 @@ CloudFrontName    = "diq3qr0d5ppph.cloudfront.net";
 USER_API_URL  = "https://"+APIGatewayId+".execute-api."+RegionName+".amazonaws.com/Dev/home"
 SECRET_API_URL = "https://"+APIGatewayId+".execute-api."+RegionName+".amazonaws.com/Dev/secret"
 RUNCMD_API_URL  = "https://"+APIGatewayId+".execute-api."+RegionName+".amazonaws.com/Dev/cmd"
+WDDB_API_URL  = "https://"+APIGatewayId+".execute-api."+RegionName+".amazonaws.com/Dev/wddb"
+RDDB_API_URL  = "https://"+APIGatewayId+".execute-api."+RegionName+".amazonaws.com/Dev/rddb"
+
 authRedirect  = "https://"+CognitoDomainName+".auth."+RegionName+".amazoncognito.com/login?response_type=token&client_id="+CognitoClientId+"&redirect_uri=https%3A%2F%2F"+CloudFrontName+"%2Findex.html";
 //authRedirect  = "https://"+CognitoDomainName+".auth."+RegionName+".amazoncognito.com/login?response_type=token&client_id="+CognitoClientId+"&redirect_uri=https%3A%2F%2F"+S3BucketName+".s3."+RegionName+".amazonaws.com%2Findex.html";
 

@@ -167,8 +167,8 @@ Resources:
     BadApi:
         Type: AWS::Serverless::Function
         Properties:
-            CodeUri: badapi/build/
-            Handler: app.lambda_handler
+            CodeUri: security_serverless_demo/
+            Handler: badapi.lambda_handler
             Runtime: python3.6
             Events:
                 Administration:
@@ -183,14 +183,14 @@ Resources:
     InvokeApi:
         Type: AWS::Serverless::Function
         Properties:
-            CodeUri: invokeapi/build/
-            Handler: app.lambda_handler
+            CodeUri: security_serverless_demo/
+            Handler: invokeapi.lambda_handler
             Runtime: python3.6
             Events:
                 Administration:
                     Type: Api
                     Properties:
-                        Path: /invoke
+                        Path: /invokeapi
                         Method: post
             Environment:
                 Variables:
@@ -234,10 +234,22 @@ Outputs:
   # https://github.com/awslabs/serverless-application-model/blob/master/docs/internals/generated_resources.rst#api
   HomePageApi:
     Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${SecureApi}.execute-api.${AWS::Region}.amazonaws.com/Dev/"
-  HomePageFunction:
-    Description: "Home page Lambda Function ARN"
-    Value: !GetAtt HomePageFunction.Arn
-  HomePageFunctionIamRole:
-    Description: "Implicit IAM Role created for Home Page function"
-    Value: !GetAtt HomePageFunction.Arn
+    Value: !Sub "https://${HomePageFunction}.execute-api.${AWS::Region}.amazonaws.com/Dev/home"
+  SecretFunctionApi:
+    Description: "API Gateway endpoint URL for Dev stage for Secret function"
+    Value: !Sub "https://${SecretFunction}.execute-api.${AWS::Region}.amazonaws.com/Dev/secret"
+  CommandFunctionApi:
+    Description: "API Gateway endpoint URL for Prod stage for Command function"
+    Value: !Sub "https://${CommandFunction}.execute-api.${AWS::Region}.amazonaws.com/Dev/cmd"
+  ReadFromDynamoDBFunctionApi:
+    Description: "API Gateway endpoint URL for Dev stage for Read from Dynamodb function"
+    Value: !Sub "https://${ReadFromDynamoDBFunction}.execute-api.${AWS::Region}.amazonaws.com/Dev/rddb"
+  WriteToDynamoDBFunctionApi:
+    Description: "API Gateway endpoint URL for Dev stage for Write to Dynamodb function"
+    Value: !Sub "https://${WriteToDynamoDBFunction}.execute-api.${AWS::Region}.amazonaws.com/Dev/wddb"
+  BadApi:
+    Description: "API Gateway endpoint URL for Dev stage for a Bad API function"
+    Value: !Sub "https://${BadApi}.execute-api.${AWS::Region}.amazonaws.com/Dev/badapi"
+  InvokeApi:
+    Description: "API Gateway endpoint URL for Dev stage for a Bad API function"
+    Value: !Sub "https://${InvokeApi}.execute-api.${AWS::Region}.amazonaws.com/Dev/invokeapi"
