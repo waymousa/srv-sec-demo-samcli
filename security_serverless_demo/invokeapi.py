@@ -6,28 +6,59 @@ logger.debug('os.environ=%s' % os.environ)
 
 def lambda_handler(event, context):
 
-    url=os.environ['apiurl']
-    logger.info('trying %s' % url)
-    try:
-        apiresponse = requests.post(url)
-        logger.info('response was: %s' % apiresponse.json())
-        respjson = apiresponse.json()
-        respstr = json.dumps(respjson)
-        logger.info('respstr is: %s' % respstr)
-        code = 200
-    except OSError as e:
-        logger.error('exception=%s' % e, exc_info=True)
-        return strings.bad_response
-    except Exception as e:
-        logger.error('exception=%s' % e, exc_info=True)
-        respstr = '{"exception type":"%s"}' % (e)
-        code = 500
+    logger.info('request started')
+    logger.debug('event=%s' % event)
+    logger.debug('context=%s' % context)
+    groups=event['requestContext']['authorizer']['claims']['cognito:groups']
+    logger.debug('groups=%s' % groups)
+    sub=event['requestContext']['authorizer']['claims']['sub']
+    logger.debug('sub=%s' % sub)
 
-    response = {
-        "statusCode": code,
-        "headers": {"content-type": "application/json"},
-        "body": respstr
-    }
-    logger.info("response = %s" % response)
+    if 'secret' in groups:
+        logger.debug('sub %s is authorised.' % sub)
+        url=os.environ['apiurl']
+        logger.info('trying %s' % url)
+        try:
+            apiresponse = requests.post(url)
+            logger.info('response was: %s' % apiresponse.json())
+            respjson = apiresponse.json()
+            respstr = json.dumps(respjson)
+            logger.info('respstr is: %s' % respstr)
+            code = 200
+        except OSError as e:
+            logger.error('exception=%s' % e, exc_info=True)
+            return strings.bad_response
+        except Exception as e:
+            logger.error('exception=%s' % e, exc_info=True)
+            respstr = '{"exception type":"%s"}' % (e)
+            code = 500
 
-    return response
+        response = {
+            "statusCode": code,
+            "headers": {
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+                "Access-Control-Allow-Origin": "https://diq3qr0d5ppph.cloudfront.net",
+                "Content-Type": "application/json"
+            },
+            "body": respstr
+        }
+        logger.info("response = %s" % response)
+
+        return response
+
+    else:
+        logger.debug('sub %s is unauthorised.' % sub)
+        return {
+            "statusCode": 403,
+            "headers": {
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+                "Access-Control-Allow-Origin": "https://diq3qr0d5ppph.cloudfront.net",
+                "Content-Type": "text/html"
+                },
+            "body": "Unauthorized"
+        }
+
+
+    

@@ -8,51 +8,60 @@ logger.debug('os.environ=%s' % os.environ)
 dynamodb = boto3.resource('dynamodb')
 
 def lambda_handler(event, context):
-    table = dynamodb.Table(os.environ['table'])
 
-    # fetch all todos from the database
-    result = table.scan()
+    logger.info('request started')
+    logger.debug('event=%s' % event)
+    logger.debug('context=%s' % context)
+    groups=event['requestContext']['authorizer']['claims']['cognito:groups']
+    logger.debug('groups=%s' % groups)
+    sub=event['requestContext']['authorizer']['claims']['sub']
+    logger.debug('sub=%s' % sub)
 
-    logger.debug('result_set=%s' % result)
+    if 'secret' in groups:
+        logger.debug('sub %s is authorised.' % sub)
+        table = dynamodb.Table(os.environ['table'])
 
-    items = json.dumps(result['Items'])
+        # fetch all todos from the database
+        result = table.scan()
 
-    logger.debug('result_items=%s' % items)
+        logger.debug('result_set=%s' % result)
 
-    table = json2html.convert(json = items)
+        items = json.dumps(result['Items'])
 
-    logger.debug('table=%s' % table)
+        logger.debug('result_items=%s' % items)
 
-    table = html.unescape(table)
+        table = json2html.convert(json = items)
 
-    logger.debug('unecoded_table=%s' % table)
-    # create a response
-    
-    #response = {
-    #    "statusCode": 200,
-    #    "body": json.dumps(result['Items'])
-    #}
+        logger.debug('table=%s' % table)
 
-    #itemslist = []
-    #itemsdict = {}
+        table = html.unescape(table)
 
-    #for i in result['Items']:
-    #    itemsdict = json.loads(i)
-    #    newitems.append(itemsdict)    
+        logger.debug('unecoded_table=%s' % table)
 
-        # print(json.dumps(i, cls=DecimalEncoder))
-    
+        response = {
+            "statusCode": 200,
+            "headers": {
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+                "Access-Control-Allow-Origin": "https://diq3qr0d5ppph.cloudfront.net",
+                "Content-Type": "application/json"
+                },
+            "body": table
+        }
 
+        return response
 
-    response = {
-        "statusCode": 200,
-        "headers": {
-            "Access-Control-Allow-Headers": "Content-Type",
-            "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-            "Access-Control-Allow-Origin": "https://diq3qr0d5ppph.cloudfront.net",
-            "Content-Type": "application/json"
-            },
-        "body": table
-    }
+    else:
+        logger.debug('sub %s is unauthorised.' % sub)
+        response = {
+            "statusCode": 403,
+            "headers": {
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+                "Access-Control-Allow-Origin": "https://diq3qr0d5ppph.cloudfront.net",
+                "Content-Type": "text/html"
+                },
+            "body": "Unauthorized"
+        }
 
-    return response
+        return response

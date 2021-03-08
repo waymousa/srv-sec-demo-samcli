@@ -10,8 +10,10 @@
  </head>
 
  <body>
-  <button onclick="login()">Login</button>
-  <button onclick="logout()">Logout</button>
+   <p>
+    <button onclick="login()">Login</button>
+    <button onclick="logout()">Logout</button>
+   </p>
   <p>
     <button onclick="GetHomePage()">GetHomePage</button>
     <div class="publicpage" id="publicpage"></div>
@@ -35,12 +37,7 @@
   </p>
   <p>
     <button onclick="ReadFromDynamoDb()">Get Registered Users</button>
-    <div class="readfromdynamodbresult" id="readfromdynamodbresult">Registeres users result:</div>
+    <div class="readfromdynamodbresult" id="readfromdynamodbresult">Registered users result:</div>
   </p>
-  <div class="noworkspaces" id="noworkspaces">No Workspaces instances found for you! (sorry)</div>
-  <div class="response" id="response"></div>
-  <div class="workspaceslist" id="userworkspaces"></div>
-  <div class="workspaceslist" id="adminworkspaces"></div>
-
  </body>
 </html>

@@ -1,23 +1,49 @@
-import json
+import json, logging, os
 import security_layer as security_layer
 
-# import requests
-
+logger = logging.getLogger()
+logger.setLevel(os.environ['loglevel'])
+logger.debug('os.environ=%s' % os.environ)
+# 2021 - this is a test to trigger a re-install
 
 def lambda_handler(event, context):
 
-    respjson = { 
-        "layer": security_layer.getLogonInfo(), 
-        "message": "public page"
-    } 
+    logger.info('request started')
+    logger.debug('event=%s' % event)
+    logger.debug('context=%s' % context)
+    groups=event['requestContext']['authorizer']['claims']['cognito:groups']
+    logger.debug('groups=%s' % groups)
+    sub=event['requestContext']['authorizer']['claims']['sub']
+    logger.debug('sub=%s' % sub)
 
-    return {
-        "statusCode": 200,
-        "headers": {
-            "Access-Control-Allow-Headers": "Content-Type",
-            "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
-            "Access-Control-Allow-Origin": "https://diq3qr0d5ppph.cloudfront.net",
-            "Content-Type": "application/json"
-            },        
-        "body": json.dumps(respjson)
-    }
+    if 'home' in groups:
+        logger.debug('sub %s is authorised.' % sub)
+        respjson = { 
+            "layer": security_layer.getLogonInfo(), 
+            "message": "public page"
+            } 
+        
+        logger.info('request finished')
+
+        return {
+            "statusCode": 200,
+            "headers": {
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+                "Access-Control-Allow-Origin": "https://diq3qr0d5ppph.cloudfront.net",
+                "Content-Type": "application/json"
+                },        
+            "body": json.dumps(respjson)
+        }
+    else:
+        logger.debug('sub %s is unauthorised.' % sub)
+        return {
+            "statusCode": 403,
+            "headers": {
+                "Access-Control-Allow-Headers": "Content-Type",
+                "Access-Control-Allow-Methods": "OPTIONS,POST,GET",
+                "Access-Control-Allow-Origin": "https://diq3qr0d5ppph.cloudfront.net",
+                "Content-Type": "application/json"
+                },        
+            "body": "Unauthorized"
+        }  

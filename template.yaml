@@ -88,6 +88,9 @@ Resources:
             RestApiId: !Ref SecureApi
             Path: /home
             Method: GET
+      Environment:
+        Variables:
+          loglevel: DEBUG
 
   SecretFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -104,6 +107,9 @@ Resources:
             RestApiId: !Ref SecureApi
             Path: /secret
             Method: GET
+      Environment:
+        Variables:
+          loglevel: DEBUG
   
   CommandFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -166,29 +172,29 @@ Resources:
         - DynamoDBCrudPolicy:
             TableName: !Ref TableOfStuff
 
-    BadApi:
-      Type: AWS::Serverless::Function
-      Properties:
-        CodeUri: security_serverless_demo/
-        Handler: badapi.lambda_handler
-        Runtime: python3.8
-        Events:
-          Root:
-            Type: Api
-            Properties:
-              RestApiId: !Ref SecureApi
-              Path: /badapi
-              Method: post
-      Environment:
-        Variables:
-          loglevel: INFO
+  BadApi:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: security_serverless_demo/
+      Handler: badapi.lambda_handler
+      Runtime: python3.8
+      Events:
+        Root:
+          Type: Api
+          Properties:
+            RestApiId: !Ref SecureApi
+            Path: /badapi
+            Method: post
+    Environment:
+      Variables:
+        loglevel: INFO
 
-    InvokeApi:
-      Type: AWS::Serverless::Function
-      Properties:
-        CodeUri: security_serverless_demo/
-        Handler: invokeapi.lambda_handler
-        Runtime: python3.8
+  InvokeApi:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: security_serverless_demo/
+      Handler: invokeapi.lambda_handler
+      Runtime: python3.8
       Events:
         Root:
           Type: Api
@@ -199,7 +205,7 @@ Resources:
       Environment:
         Variables:
           loglevel: INFO
-          apiurl: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Dev/badapi"
+          apiurl: !Sub "put bad api url here"
 
   TableOfStuff:
     Type: AWS::DynamoDB::Table
