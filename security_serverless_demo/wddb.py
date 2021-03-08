@@ -32,6 +32,8 @@ def lambda_handler(event, context):
         email=body['email']
         email=email[0]
         logger.debug('email=%s' % email)
+        email = '<a href="mailto:' + email + '">' + email + '</a>'
+        logger.debug('email=%s' % email)
         myuuid=str(uuid.uuid4())
         logger.debug('uuid=%s' % myuuid)
         response=table.put_item(Item={"uuid":myuuid,"firstname":firstname,"surname":surname,"email":email})

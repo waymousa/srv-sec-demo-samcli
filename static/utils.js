@@ -34,7 +34,7 @@ RDDB_API_URL  = "https://"+APIGatewayId+".execute-api."+RegionName+".amazonaws.c
 
 authRedirect  = "https://"+CognitoDomainName+".auth."+RegionName+".amazoncognito.com/login?response_type=token&client_id="+CognitoClientId+"&redirect_uri=https%3A%2F%2F"+CloudFrontName+"%2Findex.html";
 //authRedirect  = "https://"+CognitoDomainName+".auth."+RegionName+".amazoncognito.com/login?response_type=token&client_id="+CognitoClientId+"&redirect_uri=https%3A%2F%2F"+S3BucketName+".s3."+RegionName+".amazonaws.com%2Findex.html";
-LOGOUT_URL  = "https://"+CognitoDomainName+".auth."+RegionName+".amazoncognito.com/logout?client_id="+CognitoClientId+"&redirect_uri=https%3A%2F%2F"+CloudFrontName+"%2Findex.html";
+LOGOUT_URL  = "https://"+CognitoDomainName+".auth."+RegionName+".amazoncognito.com/logout?response_type=code&client_id="+CognitoClientId+"&redirect_uri=https%3A%2F%2F"+CloudFrontName+"%2Findex.html";
 
 function parseJWT(token) {
  var base64Url = token.split('.')[1];
@@ -419,26 +419,27 @@ function ReadFromDynamoDb() {
 }
 
 function logout() {
-  var accessToken = localStorage.getItem('WorkspacesAccessToken');
+  window.location = LOGOUT_URL;
+  //var accessToken = localStorage.getItem('WorkspacesAccessToken');
   //var API_URL = RUNCMD_API_URL+"?command="+document.getElementById("command").value;
-  var API_URL = LOGOUT_URL;
-  var API_Client = new XMLHttpRequest();
-  API_Client.onreadystatechange = function() {
-   if (API_Client.readyState == XMLHttpRequest.DONE) {
-    Result = API_Client.responseText;
-    console.log(Result);
-   }
-  }
+  //var API_URL = LOGOUT_URL;
+  //var API_Client = new XMLHttpRequest();
+  //API_Client.onreadystatechange = function() {
+  // if (API_Client.readyState == XMLHttpRequest.DONE) {
+  //  Result = API_Client.responseText;
+  //  console.log(Result);
+  // }
+ // }
 
-  API_Client.open("get", API_URL);
+  //API_Client.open("get", API_URL);
   //API_Client.withCredentials = true;
-  API_Client.setRequestHeader("Content-Type", "text/html");
+  //API_Client.setRequestHeader("Content-Type", "text/html");
   //API_Client.setRequestHeader("Access-Control-Allow-Headers", "Content-Type");
   //API_Client.setRequestHeader("Access-Control-Allow-Methods", "OPTIONS,POST,GET");
   //API_Client.setRequestHeader("Access-Control-Allow-Origin", "*");
-  API_Client.setRequestHeader("Authorization", accessToken);
-  API_Client.timeout = 10000;
-  API_Client.ontimeout = ProcessTimeout;
-  API_Client.send();
+  //API_Client.setRequestHeader("Authorization", accessToken);
+  //API_Client.timeout = 10000;
+  //API_Client.ontimeout = ProcessTimeout;
+  //API_Client.send();
   localStorage.removeItem('WorkspacesAccessToken');
 }
