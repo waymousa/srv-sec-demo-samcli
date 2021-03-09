@@ -4,7 +4,6 @@ import security_layer as security_layer
 logger = logging.getLogger()
 logger.setLevel(os.environ['loglevel'])
 logger.debug('os.environ=%s' % os.environ)
-# 2021 - this is a test to trigger a re-install
 
 def lambda_handler(event, context):
 
@@ -20,7 +19,7 @@ def lambda_handler(event, context):
         logger.debug('sub %s is authorised.' % sub)
         respjson = { 
             "layer": security_layer.getLogonInfo(), 
-            "message": "public page"
+            "message": "Here's some public information."
             } 
         
         logger.info('request finished')

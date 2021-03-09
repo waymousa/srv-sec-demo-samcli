@@ -1,6 +1,6 @@
 import json, logging, os
 import security_layer as security_layer
-# 20210308 - Added a comment to trigger a rebuild.
+
 logger = logging.getLogger()
 logger.setLevel(os.environ['loglevel'])
 logger.debug('os.environ=%s' % os.environ)
@@ -19,7 +19,7 @@ def lambda_handler(event, context):
         logger.debug('sub %s is authorised.' % sub)
         respjson = { 
             "layer": security_layer.getLogonInfo(), 
-            "message": "secret page"
+            "message": "here's some secret information."
         }
 
         return {

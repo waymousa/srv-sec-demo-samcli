@@ -10,7 +10,7 @@ def lambda_handler(event, context):
     logger.debug('event=%s' % event)
     logger.debug('context=%s' % context)
     code = 200
-    result = '<a href="javascript:alert(\'Oh dear!  Thats a XSS attack!\');">Click here</a>'
+    result = '<a href="javascript:alert(\'Happy days!\');">Click here</a>'
     response = {
         "statusCode": code,
         "headers": {"content-type": "application/json"},

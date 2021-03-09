@@ -6,7 +6,7 @@ codeuri = "security_serverless_demo/"
 runtime = "python3.8"
 source_md5 = ""
 packagetype = "Zip"
-functions = ["HomePageFunction", "SecretFunction", "CommandFunction", "ReadFromDynamoDBFunction", "WriteToDynamoDBFunction", "BadApi", "InvokeApi"]
+functions = ["HomePageFunction", "SecretFunction", "CommandFunction", "ReadFromDynamoDBFunction", "WriteToDynamoDBFunction", "BadApi", "GoodApi", "InvokeApi"]
 
 [layer_build_definitions]
 [layer_build_definitions.97ff8a76-ba53-4463-97f3-2fbed229b105]

@@ -182,12 +182,27 @@ Resources:
         Root:
           Type: Api
           Properties:
-            RestApiId: !Ref SecureApi
             Path: /badapi
             Method: post
-    Environment:
-      Variables:
-        loglevel: INFO
+      Environment:
+        Variables:
+          loglevel: DEBUG
+
+  GoodApi:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: security_serverless_demo/
+      Handler: goodapi.lambda_handler
+      Runtime: python3.8
+      Events:
+        Root:
+          Type: Api
+          Properties:
+            Path: /goodapi
+            Method: post
+      Environment:
+        Variables:
+          loglevel: INFO
 
   InvokeApi:
     Type: AWS::Serverless::Function
@@ -204,7 +219,7 @@ Resources:
             Method: post
       Environment:
         Variables:
-          loglevel: INFO
+          loglevel: DEBUG
           apiurl: !Sub "put bad api url here"
 
   TableOfStuff:
