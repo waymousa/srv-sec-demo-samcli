@@ -5,13 +5,13 @@
   <title>Naive Application</title>
   <link rel="stylesheet" href="styles.css" type="text/css">
   <link rel="icon" href="naiveapp.ico">
-  <script type="text/javascript" src="utils.js"></script>
+  <script type="text/javascript" src="js/utils.js"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
  </head>
 
  <body>
    <p>
-    <button onclick="login()">Login</button>
+    <button onclick="main()">Login</button>
     <button onclick="logout()">Logout</button>
    </p>
   <p>
@@ -45,5 +45,16 @@
     <button onclick="InvokeAPI()">Invoke An API on the Internet</button>
     <div class="invokeapiresult" id="invokeapiresult">Invoke API result:</div>
   </p>
+  <h2>Cognito User</h2>
+  <p style="white-space:pre-line;" id="token_status"></p>
+  <p>Id Token</p>
+  <p style="white-space:pre-line;" id="id_token"></p>
+  <p>Access Token</p>
+  <p style="white-space:pre-line;" id="access_token"></p>
+  <p>User Profile</p>
+  <p style="white-space:pre-line;" id="userInfo"></p>
+  <script language="JavaScript" type="text/javascript"src="https://kjur.github.io/jsrsasign/jsrsasign-latest-all-min.js"></script>
+  <script src="js/verifier.js"></script>
+  <script src="js/userprofile.js"></script>
  </body>
 </html>
