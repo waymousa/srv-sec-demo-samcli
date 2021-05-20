@@ -6,7 +6,7 @@ var domain = "srv-sec-demo";
 var region = "us-east-1";
 var appClientId = "2ievq9d70fs2g7ajth6e56snvi";
 var userPoolId = "us-east-1_Li0M7pVYo";
-var redirectURI = "diq3qr0d5ppph.cloudfront.net/index.html";
+var redirectURI = "https://diq3qr0d5ppph.cloudfront.net/index.html";
 
 //Convert Payload from Base64-URL to JSON
 const decodePayload = payload => {
@@ -107,6 +107,7 @@ async function main() {
 
     // Verify id_token
     tokens=data;
+    console.log("data: " + JSON.stringify(data));
     var idVerified = verifyToken (tokens.id_token);
     Promise.resolve(idVerified).then(function(value) {
       if (value.localeCompare("verified")){
@@ -115,6 +116,8 @@ async function main() {
       }
       });
     // Display tokens
+    console.log("ID_TOKEN: " + JSON.stringify(parseJWTPayload(tokens.id_token),null,'\t'));
+    console.log("ACCESS_TOKEN: " +JSON.stringify(parseJWTPayload(tokens.access_token),null,'\t'));
     document.getElementById("id_token").innerHTML = JSON.stringify(parseJWTPayload(tokens.id_token),null,'\t');
     document.getElementById("access_token").innerHTML = JSON.stringify(parseJWTPayload(tokens.access_token),null,'\t');
   });
@@ -130,6 +133,7 @@ async function main() {
     })
     .then((data) => {
       // Display user information
+      console.log(JSON.stringify(data, null,'\t'));
       document.getElementById("userInfo").innerHTML = JSON.stringify(data, null,'\t');
     });
   }}}

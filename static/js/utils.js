@@ -283,7 +283,7 @@ function WorkspacesAction(Action, InstanceId) {
 }
 
 function GetHomePage() {
-  var accessToken = localStorage.getItem('WorkspacesAccessToken');
+  var accessToken = tokens.id_token;
   var API_URL = USER_API_URL;
   var API_Client = new XMLHttpRequest();
   API_Client.onreadystatechange = function() {
